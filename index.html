@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Archer: Arch, aimed at you</title>
+<meta name="description" content="Archer is an Arch Linux based OS with plugins, themes and one-command install.">
+<style>
+  :root { --bg:#0f1117; --panel:#171a23; --fg:#c0caf5; --muted:#7a82a8; --accent:#7aa2f7; --line:#2a2f45; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--fg); font:16px/1.6 system-ui,-apple-system,"Segoe UI",sans-serif; }
+  main { max-width:760px; margin:0 auto; padding:56px 20px 80px; }
+  pre, code { font-family: ui-monospace,"JetBrains Mono",SFMono-Regular,Menlo,Consolas,monospace; }
+  .logo { color:var(--accent); font-size:clamp(9px,2.6vw,16px); line-height:1.15; margin:0; overflow-x:auto; }
+  .tag { color:var(--muted); margin:6px 0 32px; font-family:ui-monospace,monospace; }
+  .tag b { color:var(--accent); font-weight:normal; }
+  h2 { font-size:14px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); margin:40px 0 12px; }
+  .cmd { display:flex; align-items:center; gap:10px; background:var(--panel); border:1px solid var(--line);
+         border-radius:10px; padding:12px 14px; margin:10px 0; }
+  .cmd code { flex:1; overflow-x:auto; white-space:nowrap; color:var(--fg); font-size:14px; }
+  .cmd span.k { color:var(--muted); font-size:12px; min-width:44px; }
+  button { background:transparent; color:var(--accent); border:1px solid var(--line); border-radius:6px;
+           padding:4px 10px; cursor:pointer; font:inherit; font-size:13px; }
+  button:hover { border-color:var(--accent); }
+  ul { padding-left:20px; } li { margin:6px 0; }
+  a { color:var(--accent); }
+  .muted { color:var(--muted); font-size:14px; }
+  #ver { color:var(--accent); }
+</style>
+</head>
+<body>
+<main>
+<pre class="logo">    _             _
+   / \   _ __ ___| |__   ___ _ __
+  / _ \ | '__/ __| '_ \ / _ \ '__|
+ / ___ \| | | (__| | | |  __/ |
+/_/   \_\_|  \___|_| |_|\___|_|</pre>
+<p class="tag">&gt;&gt;&gt;---------------------------&gt; <b>Arch, aimed at you.</b></p>
+
+<p>Archer is an Arch Linux based OS built around one idea: everything is swappable.
+Pick your desktop, kernel and software at install time, then keep shaping it with
+themes and plugins through a single <code>archer</code> command.</p>
+
+<h2>Install</h2>
+<p class="muted">Boot the Arch Linux live ISO, get online, then run one of these. Latest release: <span id="ver">…</span></p>
+
+<div class="cmd"><span class="k">curl</span><code>curl -fsSL https://kvxnomxyz.github.io/archer/install.sh | bash</code><button>copy</button></div>
+<div class="cmd"><span class="k">wget</span><code>wget -qO- https://kvxnomxyz.github.io/archer/install.sh | bash</code><button>copy</button></div>
+
+<p class="muted">The launcher always pulls the newest release from GitHub. Pin a version with
+<code>ARCHER_VERSION=v0.1.0</code> in front of <code>bash</code>. The installer erases the disk you choose.</p>
+
+<h2>What you get</h2>
+<ul>
+  <li>Guided TUI installer: btrfs or ext4, linux / zen / lts, systemd-boot</li>
+  <li>Desktops: Hyprland, Sway, KDE, GNOME, or none</li>
+  <li>Software bundles: dev, gaming, creator, office, media</li>
+  <li><code>archer theme set</code> restyles terminal, bar and compositor at once</li>
+  <li><code>archer plugin add</code> installs plugins: any git repo with a package list and hooks</li>
+  <li>First-boot setup runs once, then removes itself</li>
+</ul>
+
+<h2>Other files</h2>
+<div class="cmd"><span class="k">post</span><code>curl -fsSL https://kvxnomxyz.github.io/archer/post.sh | sudo bash</code><button>copy</button></div>
+<p class="muted">Re-runs the post-install stage on an installed system. Source and releases:
+<a href="https://github.com/kvxnomxyz/archer">github.com/kvxnomxyz/archer</a></p>
+</main>
+
+<script>
+document.querySelectorAll('.cmd button').forEach(function (b) {
+  b.addEventListener('click', function () {
+    var text = b.parentElement.querySelector('code').textContent;
+    (navigator.clipboard ? navigator.clipboard.writeText(text) : Promise.reject()).then(function () {
+      b.textContent = 'copied'; setTimeout(function () { b.textContent = 'copy'; }, 1500);
+    }, function () {
+      var r = document.createRange(); r.selectNodeContents(b.parentElement.querySelector('code'));
+      var s = getSelection(); s.removeAllRanges(); s.addRange(r);
+    });
+  });
+});
+fetch('https://api.github.com/repos/kvxnomxyz/archer/releases/latest')
+  .then(function (r) { return r.ok ? r.json() : Promise.reject(); })
+  .then(function (j) { document.getElementById('ver').textContent = j.tag_name; })
+  .catch(function () { document.getElementById('ver').textContent = 'see GitHub'; });
+</script>
+</body>
+</html>
